@@ -4,8 +4,7 @@
 
 📚StudyFriend runs AI model locally thanks to the _open-source community_ ❤
 
-📚StudyFriend can:
--  Generate a Q&A file from pdfs and images, useful for self-evaluation of study materials.
+📚StudyFriend can generate a Q&A file from pdfs and images, useful for self-evaluation of study materials.
 
 # ⎑ Installation
 
