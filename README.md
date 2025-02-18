@@ -10,8 +10,7 @@
 
 # ⌰ Collaborations
 
-**❗You're more than welcome to fix, add or suggest study tools.❗</br>
-Feel free to contact me.**
+**❗You're more than welcome to fix, add or suggest study tools.❗**
 
 # ⎑ Installation
 
