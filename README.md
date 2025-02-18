@@ -42,8 +42,9 @@ python -m pip install .
 > Markdown beatufier heavily depends on prompts templates, change it accordingly or disable it.
 
 # ⏃ Example
-[output.md](/tests/output.md) is a Q&A file automatically generated from the slides in [presentation.pdf](/tests/presentation.pdf) (taken from [this](https://github.com/sangioai/torchpace) repo of mine), after being transformed into [these](/tests/presentation) images. </br>
-The command to do so is:</br>
+[output.md](/tests/output.md) is a Q&A file automatically generated from the slides in [presentation.pdf](/tests/presentation.pdf) (taken from [this](https://github.com/sangioai/torchpace) repo of mine), after being transformed into [these](/tests/presentation) images.
+
+This command was used:</br>
 ```text
 python -m study_friend.query -d ./test -im 700  
 ```
