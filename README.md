@@ -2,8 +2,9 @@
 
 📚StudyFriend is a pool of AI tools that helps me study. It runs AI model locally thanks to the _open-source community_ ❤
 
-Now it can:
+📚StudyFriend can:
 -  Generate a Q&A file from pdfs and images, useful self-evaluation of study materials.
+-  Convert pdfs to images.
 
 # ⎑ Installation
 
