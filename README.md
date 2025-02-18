@@ -4,13 +4,14 @@
 
 📚StudyFriend runs AI model locally thanks to the _open-source community_ ❤
 
-📚StudyFriend can generate a Q&A file from pdfs and images, useful for self-evaluation of study materials.
+📚StudyFriend can: </br>
+- Generate a Q&A file from pdfs and images, useful for self-evaluation of study materials.
+- Convert pdfs into images.
 
 # ⌰ Collaborations
 
-You're more than welcome to fix, add or suggest tools that can help students focus on study materials.
-
-Feel free to contact me.
+**❗You're more than welcome to fix, add or suggest study tools.❗</br>
+Feel free to contact me.**
 
 # ⎑ Installation
 
@@ -23,17 +24,22 @@ python -m pip install .
 
 To genrate Q&A file from pdfs: </br>
 ```text
-python -m pip install .
+python -m study_friend.query -d ./test  
 ```
+
+> [!Note]
+> **~6GB** of GPU VRAM of unified RAM are required. 
+
 
 To generate images from pdfs: </br>
 ```text
-python -m pip install .
+python -m study_friend.convert -d ./test
 ```
 
 To print help: </br>
 ```text
-python -m pip install .
+python -m study_friend.query -h
+python -m study_friend.convert -h
 ```
 
 > [!Tip]
@@ -79,7 +85,7 @@ A brief and incomplete list of things to do or fix in this extension:
 Thanks go to the open-source community that makes this possible.
 
 [mlx-vlm](https://github.com/Blaizzy/mlx-vlm) - Vision model inferencing for MLX.</br>
-[🤗Qwen2.5-VL-7B-Instruct-4bit](https://huggingface.co/mlx-community/Qwen2.5-VL-7B-Instruct-4bit) - 🤗HuggingFace 4bit-quantized version of [Qwen2.5-VL](https://github.com/QwenLM/Qwen2.5-VL). Visione Model.
+[🤗Qwen2.5-VL-7B-Instruct-4bit](https://huggingface.co/mlx-community/Qwen2.5-VL-7B-Instruct-4bit) - 🤗HuggingFace 4bit quantized version of [Qwen2.5-VL](https://github.com/QwenLM/Qwen2.5-VL).
 
 
 
