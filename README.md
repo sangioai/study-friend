@@ -60,7 +60,7 @@ On my Mac M1, using **--image_size** of 700 it yields:</br>
 > Peak memory: 7.351 GB</br>
 
 
-## ☑ TODO
+# ⎷ TODO
 
 A brief and incomplete list of things to do or fix in this extension:
 - [x] MLX support
@@ -68,20 +68,20 @@ A brief and incomplete list of things to do or fix in this extension:
 - [ ] 🤗Transformers integration
 - [ ] 🤗smolagents integration
 
-## ⍾ Credits
+# ⍾ Credits
 
 [mlx-vlm](https://github.com/Blaizzy/mlx-vlm) - Vision model inferencing for MLX.
 
 [🤗Qwen2.5-VL-7B-Instruct-4bit](https://huggingface.co/mlx-community/Qwen2.5-VL-7B-Instruct-4bit) - 🤗HuggingFace 4bit-quantized version of [Qwen2.5-VL](https://github.com/QwenLM/Qwen2.5-VL). Visione Model.
 
 
-## ☆ Collaborations
+# ☆ Collaborations
 
 You're more than welcome to fix, add or suggest things.
 
 Feel free to contact me.
 
-## © Author
+# © Author
 
 [Marco Sangiorgi](https://github.com/sangioai)
 </br>
