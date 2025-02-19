@@ -53,7 +53,7 @@ python -m study_friend.convert -h
 > Markdown beatufier heavily depends on prompts templates, change it accordingly or disable it.
 
 # ⏃ Example
-[output.md](/tests/output.md) is a Q&A file automatically generated from the slides in [presentation.pdf](/tests/presentation.pdf) (taken from [this](https://github.com/sangioai/torchpace) repo of mine), after being transformed into [these](/tests/presentation) images.
+[output.md](/samples/output.md) is a Q&A file automatically generated from the slides in [presentation.pdf](/samples/presentation.pdf) (taken from [this](https://github.com/sangioai/torchpace) repo of mine), after being transformed into [these](/samples/presentation) images.
 
 This command was used:</br>
 ```text
