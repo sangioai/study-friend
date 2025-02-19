@@ -12,7 +12,9 @@ from .utils import (
     add_argument_query,
     add_argument_common,
 )
-import convert
+from .convert import (
+    convertPDFtoImages
+)
 
 def load_model(model_path, verbose=False):
     """
@@ -174,7 +176,7 @@ if __name__ == "__main__":
     # let's use a temp file to store raw responses
     temp_file = args.output_file + "_temp"
     # let's call the functions with the arguments
-    dirs = convert.convertPDFtoImages(args.dir, args.image_size)
+    dirs = convertPDFtoImages(args.dir, args.image_size)
     # let's load the model
     model, processor, config = load_model(args.model, args.verbose)
     # let's group images
