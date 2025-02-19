@@ -60,12 +60,12 @@ This command was used:</br>
 python -m study_friend.query -d ./test -im 700  
 ```
 
-On my Mac M1, using **--image_size** of 500 it yields:</br>
+On my Mac M1, using default 🤗Qwen2.5-VL-7B-Instruct-4bit and **--image_size** of 500 it yields:</br>
 > Prompt: 320 tokens, 87.693 tokens-per-sec</br>
 > Generation: 9 tokens, 15.169 tokens-per-sec</br>
 > Peak memory: 5.916 GB</br>
 
-On my Mac M1, using **--image_size** of 700 it yields:</br>
+On my Mac M1, using default 🤗Qwen2.5-VL-7B-Instruct-4bit and **--image_size** of 700 it yields:</br>
 > Prompt: 1145 tokens, 58.693 tokens-per-sec</br>
 > Generation: 159 tokens, 11.566 tokens-per-sec</br>
 > Peak memory: 7.351 GB</br>
