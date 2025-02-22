@@ -14,25 +14,30 @@
 
 # ⎑ Installation
 
-To build: </br>
+To build use python>=3.10: </br>
 ```text
 python -m pip install .
 ```
+
+> [!Important]
+> On Windows: be sure to have [poppler](https://github.com/oschwartz10612/poppler-windows/releases/) /bin in you PATH, as stated in [pdf2image](https://github.com/Belval/pdf2image).
+
 
 # ⌖ Usage
 
 To genrate Q&A file from pdfs: </br>
 ```text
-python -m study_friend.query -d ./test  
+python -m study_friend.query -d ./samples  
 ```
 
 > [!Note]
-> **~6GB** of GPU VRAM of unified RAM are required. 
+> On MAC: **~6GB** of unified RAM are required. 
+> On Windows/Linux: **4GB** of GPU VRAM are required
 
 
 To generate images from pdfs: </br>
 ```text
-python -m study_friend.convert -d ./test
+python -m study_friend.convert -d ./samples
 ```
 
 To print help: </br>
@@ -42,11 +47,11 @@ python -m study_friend.convert -h
 ```
 
 > [!Tip]
-> Use **--image_size** to control the size of converted images.</br>
+> Use `--image_size` to control the size of converted images.</br>
 > The smaller the image size the smoller the amount of memory needed to store the prompt tokens, at the cost of less intepretability of the images.
 
 > [!Tip]
-> Use **--title_prompt**, **--question_prompt**, **--answer_prompt** to control the prompts used to query the AI model.</br>
+> Use `--title_prompt`, `--question_prompt`, `--answer_prompt` to control the prompts used to query the AI model.</br>
 > You can find the default prompts in [utils.py](study_friend/utils.py).
 
 > [!Warning]
@@ -60,12 +65,12 @@ This command was used:</br>
 python -m study_friend.query -d ./samples -im 700  
 ```
 
-On my Mac M1, using default **🤗Qwen2.5-VL-7B-Instruct-4bit** and **--image_size** of 500 it yields:</br>
+On my Mac M1, using default `🤗Qwen2.5-VL-7B-Instruct-4bit` and `--image_size` of 500 it yields:</br>
 > Prompt: 69.904 tokens-per-sec </br>
 > Generation: 12.865 tokens-per-sec </br>
 > Peak memory: 6.206 GB </br>
 
-On my Mac M1, using default **🤗Qwen2.5-VL-7B-Instruct-4bit** and **--image_size** of 700 it yields:</br>
+On my Mac M1, using default `🤗Qwen2.5-VL-7B-Instruct-4bit` and `--image_size` of 700 it yields:</br>
 > Prompt: 58.693 tokens-per-sec </br>
 > Generation: 11.566 tokens-per-sec </br>
 > Peak memory: 7.351 GB </br>
@@ -75,8 +80,8 @@ On my Mac M1, using default **🤗Qwen2.5-VL-7B-Instruct-4bit** and **--image_si
 
 A brief and incomplete list of things to do or fix in this extension:
 - [x] MLX support
-- [ ] CUDA support
-- [ ] 🤗Transformers integration
+- [x] CUDA support
+- [x] 🤗Transformers integration
 - [ ] 🤗smolagents integration
 
 # ☆ Credits
@@ -84,9 +89,29 @@ A brief and incomplete list of things to do or fix in this extension:
 Thanks go to the open-source community that makes this possible.
 
 [mlx-vlm](https://github.com/Blaizzy/mlx-vlm) - Vision model inferencing for MLX.</br>
-[🤗Qwen2.5-VL-7B-Instruct-4bit](https://huggingface.co/mlx-community/Qwen2.5-VL-7B-Instruct-4bit) - 🤗HuggingFace 4bit quantized version of [Qwen2.5-VL](https://github.com/QwenLM/Qwen2.5-VL).
+[mlx-community/Qwen2.5-VL-7B-Instruct-4bit](https://huggingface.co/mlx-community/Qwen2.5-VL-7B-Instruct-4bit) - 🤗HuggingFace 4bit quantized version of [Qwen2.5-VL](https://github.com/QwenLM/Qwen2.5-VL) from MLX-community.</br>
+[unsloth/Qwen2.5-VL-7B-Instruct-unsloth-bnb-4bit](https://huggingface.co/mlx-community/Qwen2.5-VL-7B-Instruct-4bit) - 🤗HuggingFace 4bit quantized version of [Qwen2.5-VL](https://github.com/QwenLM/Qwen2.5-VL) from [unsloth](https://github.com/unslothai/unsloth/).</br>
 
+# ⍰ FAQs
 
+- I cannot load the model with the following error in the 🤗Transformers library: `ValueError: Unrecognized image processor ...`. What can I do?</br>
+Try installing this commit 🤗Transformers as stated [here](https://github.com/huggingface/transformers/issues/36193):</br>
+```text
+python -m pip install git+https://github.com/huggingface/transformers.git@1931a351408dbd1d0e2c4d6d7ee0eb5e8807d7bf
+```
+And maybe next time avoid reloading 🤗Transformers run with:<br/>
+```text
+python -m pip install . --no-dependencies
+```
+
+- I cannot load the model with the following error: `... CUDAOutOfMemory ...` or similar. What can I do?</br>
+Try playing with the `--group_size` argument starting from 1 upwards, eventually play with the `--image_size` argument:<br/>
+```text
+python -m pip study_friend.query -d ./samples -g 1 -im 250 
+```
+
+- How can I make the model generate faster?</br>
+Lower the computational burden by lowering `--image_size` and `--group_size` arguments, eventually use `--max_tokens` to limit output generation at a specified length.
 
 # © Author
 

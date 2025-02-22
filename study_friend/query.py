@@ -1,54 +1,25 @@
-import mlx.core as mx
-from mlx_vlm import load, generate
-from mlx_vlm.prompt_utils import apply_chat_template
-from mlx_vlm.utils import load_config
 import argparse
 import os
 import re
 import numpy as np
 from natsort import natsorted
+from tqdm import tqdm
 
 from .utils import (
     add_argument_query,
     add_argument_common,
+    post_process_arguments,
+    print_args
+)
+from .models import (
+    load_model,
+    query
 )
 from .convert import (
-    convertPDFtoImages
+    convert_pdfs_to_images
 )
 
-def load_model(model_path, verbose=False):
-    """
-    This function loads an AI model from the specified path and returns it along with its associated configuration.
-    Args:   model_path (str): The path to the directory where the model files are stored.
-            verbose (bool, optional): If set to True, additional information will be printed during the loading process. Default is False.
-    Returns:    model (object): The loaded AI model.
-                processor (object): The tokenizer or processing function used by the model.
-                config (dict): Configuration settings for the model.
-    """
-    if verbose:
-        print(f"Loading {model_path}")
-    # Load the model
-    model, processor = load(model_path)
-    config = load_config(model_path)
-    return model, processor, config
-
-def query(model, processor, config, prompt, images, temperature = 0.1, max_tokens = 999, verbose = False):
-    """
-        This function queries a model with a prompt and images.
-        Args:
-            model (str): The model to query with.
-            processor (Processor): The processor to use for the model.
-            config (Config): The config
-    """
-    # Apply chat template
-    formatted_prompt = apply_chat_template(
-        processor, config, prompt, num_images=len(images)
-    )
-    # Generate output
-    output = generate(model, processor, formatted_prompt, images, temperature=temperature, max_tokens=max_tokens,verbose=False)
-    return output
-
-def groupImages(subDirName, group_size=3, verbose=False):
+def group_images(subDirName, group_size=3, verbose=False):
     """ 
     This function groups images in a directory into windows of a specified size.
     Args:   subDirName (str): The name of the directory from where to group images.
@@ -80,7 +51,7 @@ def groupImages(subDirName, group_size=3, verbose=False):
         grouped_files += [files]
     return grouped_files
 
-def queryImages(grouped_files, model, processor, config, title_prompt, question_prompt, answer_prompt, output_file, verbose=False):
+def query_images(grouped_files, engine, model, processor, config, title_prompt, question_prompt, answer_prompt, output_file, verbose=False):
     """
     This function queries an image processing model to extract titles and questions from grouped images, then generates answers based on these questions.
     Args:   grouped_files (list): A list of lists containing paths to the images in each group.
@@ -100,27 +71,27 @@ def queryImages(grouped_files, model, processor, config, title_prompt, question_
         # extract title
         if len(grouped_files) > 0 and len(grouped_files[0]) > 0:
             # query model - retrieve title of slide-pack
-            title = query(model, processor, config, title_prompt, [grouped_files[0][0]])
+            title = query(engine, model, processor, config, title_prompt, [grouped_files[0][0]], verbose=verbose)
             if verbose:
                 print(f"Model title response: {title}")
             # print the files to have a reference
             wfile.write(f"# {title}\n")
         # extract question-answers
-        for images in grouped_files:
+        for images in tqdm(grouped_files, leave=False, desc=f"Questions"):
             # extract image paths
             if verbose:
                 print(f"Querying model on: {images}")
             # query model - retrieve question on slides
-            output = query(model, processor, config, question_prompt, images)
+            output = query(engine, model, processor, config, question_prompt, images)
             # write the files to have a reference
             wfile.write(f"\nFiles: [{', '.join(images)}]"+"\n")
             # loop over the output lines
-            for out in output.split("\n"):
+            for out in tqdm(output.split("\n"), leave=False, desc="Answers  "):
                 # check if line contains a question
-                if (question := re.findall('[\w\d].*\?$', out)) != []:
+                if (question := re.findall("[\\w\\d].*\\?$", out)) != []:
                     question = question[0]
                     # query model - retrieve answer on question
-                    answer = query(model, processor, config, answer_prompt.format(question=question), images)
+                    answer = query(engine, model, processor, config, answer_prompt.format(question=question), images, verbose=verbose)
                     if verbose:
                         print(f"Model question: {question}")
                         print(f"Model answer: {answer}")
@@ -131,7 +102,7 @@ def queryImages(grouped_files, model, processor, config, title_prompt, question_
                 else:
                     wfile.write(out+"\n")
 
-def beautifyMarkdown(temp_file, output_file, verbose = False):
+def beautify_markdown(temp_file, output_file, verbose = False):
     """
     This function processes a Markdown file to format it according to specific rules and writes the formatted content to another file.
     Args:   temp_file (str): The path to the input Markdown file that needs to be processed.
@@ -142,10 +113,10 @@ def beautifyMarkdown(temp_file, output_file, verbose = False):
     with open(temp_file,"r") as rfile:
         with open(output_file,"w") as wfile:
             while (line := rfile.readline()) != "" :
-                quest = re.findall('[^\d. ].*\?$', line)
-                slide = re.search('(### Slide \d)(.*)$', line)
-                files = re.findall('Files: \[.*$', line)
-                sep = re.findall('---$', line)
+                quest = re.findall("[^\\d. ].*\\?$", line)
+                slide = re.search("(### Slide \\d)(.*)$", line)
+                files = re.findall("Files: \\[.*$", line)
+                sep = re.findall("---$", line)
                 # add ":question:" mark before each question
                 if quest != [] and not slide:
                     quest = "\n:question: " + quest[0] + "\n\n"
@@ -173,17 +144,22 @@ if __name__ == "__main__":
     add_argument_query(parser)
     add_argument_common(parser)
     args = parser.parse_args()
+    # process args if needed
+    post_process_arguments(args)
+    if args.verbose:
+        print("Options:")
+        print_args(args)
     # let's use a temp file to store raw responses
     temp_file = args.output_file + "_temp"
     # let's call the functions with the arguments
-    dirs = convertPDFtoImages(args.dir, args.image_size)
+    dirs = convert_pdfs_to_images(args.dir, args.image_size)
     # let's load the model
-    model, processor, config = load_model(args.model, args.verbose)
+    model, processor, config = load_model(args.engine, args.model, args.verbose)
     # let's group images
-    for d in dirs:
+    for d in tqdm(dirs, desc="Documents"):
         # group files
-        grouped_files = groupImages(d, args.group_size, args.verbose)
+        grouped_files = group_images(d, args.group_size, args.verbose)
         # query model
-        queryImages(grouped_files, model, processor, config, args.title_prompt, args.question_prompt, args.answer_prompt, temp_file, args.verbose)
+        query_images(grouped_files, args.engine, model, processor, config, args.title_prompt, args.question_prompt, args.answer_prompt, temp_file, args.verbose)
     # let's make the file priettier
-    beautifyMarkdown(temp_file, args.output_file)
+    beautify_markdown(temp_file, args.output_file)

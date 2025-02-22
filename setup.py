@@ -1,4 +1,5 @@
 import sys
+import torch
 from pathlib import Path
 
 from setuptools import find_packages, setup
@@ -9,12 +10,12 @@ root_dir = Path(__file__).parent
 # Add the package directory to the Python path
 package_dir = root_dir / "study_friend"
 sys.path.append(str(package_dir))
-print(package_dir)
 
 # Read the requirements from the requirements.txt file
 requirements_path = root_dir / "requirements.txt"
 with open(requirements_path) as fid:
-    requirements = [l.strip() for l in fid.readlines()]
+    # exclude mlx-vlm only if non-MLX device
+    requirements = [l.strip() for l in fid.readlines()  if not l.startswith("mlx-vlm") or torch.mps.is_available()]
 
 # Setup configuration
 setup(
@@ -29,7 +30,7 @@ setup(
     license="MIT",
     install_requires=requirements,
     packages=find_packages(where=root_dir),
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     entry_points={
         "console_scripts": [
             "study_friend.query = study_friend.query:main",
