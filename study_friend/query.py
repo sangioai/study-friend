@@ -8,7 +8,7 @@ from tqdm import tqdm
 from .utils import (
     add_argument_query,
     add_argument_common,
-    post_process_arguments,
+    promp_injection,
     print_args
 )
 from .models import (
@@ -51,7 +51,7 @@ def group_images(subDirName, group_size=3, verbose=False):
         grouped_files += [files]
     return grouped_files
 
-def query_images(grouped_files, engine, model, processor, config, title_prompt, question_prompt, answer_prompt, output_file, verbose=False):
+def query_images(grouped_files, engine, model, processor, config, title_prompt, question_prompt, answer_prompt, singularities, pluralities, output_file, verbose=False):
     """
     This function queries an image processing model to extract titles and questions from grouped images, then generates answers based on these questions.
     Args:   grouped_files (list): A list of lists containing paths to the images in each group.
@@ -78,11 +78,17 @@ def query_images(grouped_files, engine, model, processor, config, title_prompt, 
             wfile.write(f"# {title}\n")
         # extract question-answers
         for images in tqdm(grouped_files, leave=False, desc=f"Questions"):
+            # local question prompt for these images
+            _question_prompt = question_prompt
             # extract image paths
             if verbose:
                 print(f"Querying model on: {images}")
+            # pre-process the question_prompt if needed
+            if len(images) == 1:
+                # singular injection - makes question prompt singular to avoid non-aligned answers
+                _question_prompt = promp_injection(question_prompt, pluralities, singularities)
             # query model - retrieve question on slides
-            output = query(engine, model, processor, config, question_prompt, images)
+            output = query(engine, model, processor, config, _question_prompt, images)
             # write the files to have a reference
             wfile.write(f"\nFiles: [{', '.join(images)}]"+"\n")
             # loop over the output lines
@@ -144,8 +150,6 @@ if __name__ == "__main__":
     add_argument_query(parser)
     add_argument_common(parser)
     args = parser.parse_args()
-    # process args if needed
-    post_process_arguments(args)
     if args.verbose:
         print("Options:")
         print_args(args)
@@ -160,6 +164,6 @@ if __name__ == "__main__":
         # group files
         grouped_files = group_images(d, args.group_size, args.verbose)
         # query model
-        query_images(grouped_files, args.engine, model, processor, config, args.title_prompt, args.question_prompt, args.answer_prompt, temp_file, args.verbose)
+        query_images(grouped_files, args.engine, model, processor, config, args.title_prompt, args.question_prompt, args.answer_prompt, args.singular_injectors, args.plural_injectors, temp_file, args.verbose)
     # let's make the file priettier
     beautify_markdown(temp_file, args.output_file)

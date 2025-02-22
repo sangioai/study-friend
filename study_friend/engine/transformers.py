@@ -40,10 +40,8 @@ def query_transformers(model, processor, config, prompt, images, temperature = 0
         Returns: 
             output (str): The generated text
     """
-    print(len(images))
-    print(images)
     # safe-check: images must be presets
-    if len(images) < 1: 
+    if len(images) < 1:
         return ""
     # load images
     images = [Image.open(im) for im in images]

@@ -28,18 +28,24 @@ def add_argument_query(parser):
     parser.add_argument("-g", "--group_size", type=int, default=DEFAULT_GROUP_SIZE, help="The size of the window to group images.")
     parser.add_argument("-t", "--temperature", type=float, default=DEFAULT_TEMPERATURE, help="The temperature to use for sampling.")
     parser.add_argument("-mt", "--max_tokens", type=int, default=DEFAULT_MAX_TOKENS, help="The maximum number of tokens to generate.")
-    parser.add_argument("-p", "--prompt", type=str, default=".", help="The prompt to query the model on the provided docs.")
-    parser.add_argument("-i", "--images", nargs='+', type=str, default=[], help="Query the following images")
+    parser.add_argument("-si", "--singular_injectors", nargs='+', type=str, default=DEFAULT_SINGULARITY_INJECTORS, help="Array of singular injectors to replace pluralities in question prompt.")
+    parser.add_argument("-pi", "--plural_injectors", nargs='+', type=str, default=DEFAULT_PLURALITY_INJECTORS, help="Array of plural injectors to be used when replace them in question prompt.")
 
-def post_process_arguments(args):
+def promp_injection(prompt : str, original_injectors : list, modified_injectors : list) -> str:
     """
-        This function post processes the arguments.
+        This function modifies a prompt injecting strings in place of others.
+        Args:
+            prompt (str): The prompt to modify.
+            original_injectors (list): Array of injectors to search in prompt.
+            original_injectors (list): Array of injectors to substitute into.
+        Returns:
+            prompt (str): The modified prompt.
     """
-    # check grou_size argument
-    if args.group_size == 1:
-        # replace pluralities with singularities in question_prompt - for better generation
-        for plural, singular in zip(DEFAULT_PLURALITY_INJECTORS, DEFAULT_SINGULARITY_INJECTORS):
-            args.question_prompt = re.sub(plural, singular, args.question_prompt)
+    _prompt = prompt
+    # replace pluralities with singularities in question_prompt - for better generation
+    for origin, mod in zip(original_injectors, modified_injectors):
+        _prompt = re.sub(origin, mod, _prompt)
+    return _prompt
 
 def print_args(args):
     """
