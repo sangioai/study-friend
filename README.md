@@ -20,12 +20,16 @@ python -m pip install .
 ```
 
 > [!Important]
-> On Windows: be sure to have [poppler](https://github.com/oschwartz10612/poppler-windows/releases/) /bin in you PATH, as stated in [pdf2image](https://github.com/Belval/pdf2image).
-
+> On both Windows/Linux: install [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads)>=11.8 and [torch](https://pytorch.org/get-started/locally/)>=2.4+cu118.
+> 
+> On Windows: add [poppler](https://github.com/oschwartz10612/poppler-windows/releases/) /bin in you PATH, as stated in [pdf2image](https://github.com/Belval/pdf2image).
+>
+> On Linux: install poppler via: `apt-get install poppler-utils`
+> 
 
 # ⌖ Usage
 
-To genrate Q&A file from pdfs: </br>
+To generate Q&A file from pdfs: </br>
 ```text
 python -m study_friend.query -d ./samples  
 ```
