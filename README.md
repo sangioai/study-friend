@@ -29,6 +29,8 @@ python -m pip install .
 
 # ⌖ Usage
 
+Look at the [cookbooks](/cookbooks/)!
+
 To generate Q&A file from pdfs: </br>
 ```text
 python -m study_friend.query -d ./samples  
@@ -82,7 +84,7 @@ On my Mac M1, using default `🤗Qwen2.5-VL-7B-Instruct-4bit` and `--image_size`
 
 # ⎷ TODO
 
-A brief and incomplete list of things to do or fix in this extension:
+A brief and incomplete list of things to do or fix in this project:
 - [x] MLX support
 - [x] CUDA support
 - [x] 🤗Transformers integration
@@ -114,6 +116,9 @@ python -m study_friend.query -d ./samples -g 1 -im 250
 
 - **How can I make the model generate faster?** </br>
 Lower the computational burden by lowering `--image_size` and `--group_size` arguments, eventually use `--max_tokens` to limit output generation at a specified length.
+
+- **I don't have a GPU. What can I do?** </br>
+Use a free [Colab](https://colab.research.google.com) account, start with the [cookbooks](/cookbooks).
 
 # © Author
 

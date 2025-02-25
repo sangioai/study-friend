@@ -10,7 +10,6 @@
 *.DS_Store
 *__pycache__
 /build
-*.ipynb
 *.md_temp
 /samples
 *.pdf
