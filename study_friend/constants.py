@@ -7,8 +7,8 @@ class Engine(StrEnum):
     MLX_VLM = "mlx_vlm"
 
 # CONSTANTS - device
-DEVICE_IS_MLX = torch.mps.is_available()
-DEVICE_MEMORY_GB = (torch.cuda.torch.mps.recommended_max_memory() if DEVICE_IS_MLX else torch.cuda.memory.mem_get_info()[1]) / (1<<30) # device memory in GB
+DEVICE_IS_MLX = torch.backends.mps.is_available()
+DEVICE_MEMORY_GB = (torch.mps.recommended_max_memory() if DEVICE_IS_MLX else torch.cuda.memory.mem_get_info()[1]) / (1<<30) # device memory in GB
 
 # CONSTANTS - parser
 DEFAULT_IMAGE_SIZE = 500 #? if DEVICE_MEMORY_GB > 4. else 400 # best image size for 3B/7B models

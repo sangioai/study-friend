@@ -6,3 +6,4 @@ regex>=2024.4.16
 transformers>=4.49.0
 mlx-vlm>=0.1.14
 bitsandbytes>=0.45.2
+accelerate>=0.26.0
