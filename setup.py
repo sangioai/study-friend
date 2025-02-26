@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-import os
+import torch
 from setuptools import find_packages, setup
 
 # Get the project root directory
@@ -10,16 +10,13 @@ root_dir = Path(__file__).parent
 package_dir = root_dir / "study_friend"
 sys.path.append(str(package_dir))
 
-# CUDA-device check
-CUDA_DEVICE = os.environ.get('CUDA_PATH') is not None
-
 # Read the requirements from the requirements.txt file
 requirements_path = root_dir / "requirements.txt"
 with open(requirements_path) as fid:
-    # exclude mlx-vlm only on CUDA-device
-    requirements = [l.strip() for l in fid.readlines()  if not l.startswith("mlx-vlm")   or not CUDA_DEVICE]
+    # exclude mlx-vlm only on non-MLX device
+    requirements = [l.strip() for l in fid.readlines()  if not l.startswith("mlx-vlm")   or torch.backends.mps.is_available()]
     # exclude bitsandbytes on non-CUDA device
-    requirements = [l.strip() for l in requirements  if not l.startswith("bitsandbytes") or CUDA_DEVICE]
+    requirements = [l.strip() for l in requirements  if not l.startswith("bitsandbytes") or torch.cuda.is_available()]
 
 # Setup configuration
 setup(
