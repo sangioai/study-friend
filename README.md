@@ -1,4 +1,5 @@
 # 📚StudyFriend
+<p align="left"><a href="https://discord.gg/ya2e8dsZ"><img alt="Discord" src="https://img.shields.io/discord/1110598183144399058?logo=discord&style=flat&logoColor=white"></a></p>
 
 📚StudyFriend is a pool of AI tools that helps me study. 
 
