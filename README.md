@@ -1,5 +1,5 @@
 # 📚StudyFriend
-<p align="left"><a href="https://discord.gg/ya2e8dsZ"><img alt="Discord" src="https://img.shields.io/discord/1110598183144399058?logo=discord&style=flat&logoColor=white"></a></p>
+<p align="left"><a href="https://discord.gg/ya2e8dsZ"><img alt="Discord" src="https://img.shields.io/discord/1344633651022925867?logo=discord&style=flat&logoColor=white"></a></p>
 
 📚StudyFriend is a pool of AI tools that helps me study. 
 
@@ -7,6 +7,7 @@
 
 📚StudyFriend can: </br>
 - Generate a Q&A file from pdfs and images, useful for self-evaluation of study materials.
+- Display Q&A file.
 - Convert pdfs into images.
 
 # ⌰ Collaborations
@@ -42,6 +43,11 @@ python -m study_friend.query -d ./samples
 > On Windows/Linux: **4GB** of GPU VRAM are required
 
 
+To display the Q&A file: </br>
+```text
+python -m study_friend.display -f ./samples/output.md
+```
+
 To generate images from pdfs: </br>
 ```text
 python -m study_friend.convert -d ./samples
@@ -51,6 +57,7 @@ To print help: </br>
 ```text
 python -m study_friend.query -h
 python -m study_friend.convert -h
+python -m study_friend.display -h
 ```
 
 > [!Tip]
@@ -97,7 +104,8 @@ Thanks go to the open-source community that makes this possible.
 
 [mlx-vlm](https://github.com/Blaizzy/mlx-vlm) - Vision model inferencing for MLX.</br>
 [mlx-community/Qwen2.5-VL-7B-Instruct-4bit](https://huggingface.co/mlx-community/Qwen2.5-VL-7B-Instruct-4bit) - 🤗HuggingFace quantized version of [Qwen2.5-VL](https://github.com/QwenLM/Qwen2.5-VL) from MLX-community.</br>
-[unsloth/Qwen2.5-VL-7B-Instruct-unsloth-bnb-4bit](https://huggingface.co/mlx-community/Qwen2.5-VL-7B-Instruct-4bit) - 🤗HuggingFace quantized version of [Qwen2.5-VL](https://github.com/QwenLM/Qwen2.5-VL) from [unsloth](https://github.com/unslothai/unsloth/).
+[unsloth/Qwen2.5-VL-7B-Instruct-unsloth-bnb-4bit](https://huggingface.co/mlx-community/Qwen2.5-VL-7B-Instruct-4bit) - 🤗HuggingFace quantized version of [Qwen2.5-VL](https://github.com/QwenLM/Qwen2.5-VL) from [unsloth](https://github.com/unslothai/unsloth/).</br>
+[flask](https://github.com/pallets/flask) - Pallets lightweight WSGI web application framework.
 
 # ⍰ FAQs
 

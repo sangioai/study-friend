@@ -5,8 +5,8 @@ import PIL
 from tqdm import tqdm
 
 from .utils import (
-    add_argument_convert,
     add_argument_common,
+    add_argument_convert
 )
 def save_images(dirName, images, imageNames, image_size, verbose = False):
     """ 
@@ -62,8 +62,8 @@ def convert_pdfs_to_images(dirName, image_size, verbose = False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Convert pdfs to images.")
-    add_argument_convert(parser)
     add_argument_common(parser)
+    add_argument_convert(parser)
     args = parser.parse_args()
     # let's call the functions with the arguments
     convert_pdfs_to_images(args.dir, args.image_size, args.verbose)

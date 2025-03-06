@@ -35,7 +35,8 @@ setup(
     entry_points={
         "console_scripts": [
             "study_friend.query = study_friend.query:main",
-            "study_friend.convert = study_friend.convert:main"
+            "study_friend.convert = study_friend.convert:main",
+            "study_friend.display = study_friend.display:main"
         ]
     },
 )

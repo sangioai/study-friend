@@ -11,14 +11,13 @@ def add_argument_convert(parser):
     """
         This functions adds conversion arguments to the parser.
     """
-    parser.add_argument("-d", "--dir", type=str, default=".", help="The directory from where pdfs are stored.")
     parser.add_argument("-im", "--image_size", type=int, default=DEFAULT_IMAGE_SIZE, help="The size of the images to resize to.")
+    parser.add_argument("-d", "--dir", type=str, default=".", help="The directory from where pdfs and images are stored.")
 
 def add_argument_query(parser):
     """
         This functions adds query arguments to the parser.
     """
-    add_argument_convert(parser)
     parser.add_argument("-o", "--output_file", type=str, default=OUTPUT_FILE, help="The file to write the model response into.")
     parser.add_argument("-m", "--model", type=str, default=DEFAULT_MODEL, help="The model to query with.")
     parser.add_argument("-e", "--engine", type=str, default=DEFAULT_ENGINE, choices=[e.value for e in Engine], help=f"Type of Engine to use, can be: {' | '.join([e.value for e in Engine])}")
@@ -28,10 +27,41 @@ def add_argument_query(parser):
     parser.add_argument("-g", "--group_size", type=int, default=DEFAULT_GROUP_SIZE, help="The size of the window to group images.")
     parser.add_argument("-t", "--temperature", type=float, default=DEFAULT_TEMPERATURE, help="The temperature to use for sampling.")
     parser.add_argument("-mt", "--max_tokens", type=int, default=DEFAULT_MAX_TOKENS, help="The maximum number of tokens to generate.")
+    parser.add_argument("-ci", "--counter_injector", type=str, default=DEFAULT_COUNTER_INJECTOR, help="Counter injector to replace image count in question prompt.")
     parser.add_argument("-si", "--singular_injectors", nargs='+', type=str, default=DEFAULT_SINGULARITY_INJECTORS, help="Array of singular injectors to replace pluralities in question prompt.")
     parser.add_argument("-pi", "--plural_injectors", nargs='+', type=str, default=DEFAULT_PLURALITY_INJECTORS, help="Array of plural injectors to be used when replace them in question prompt.")
 
-def promp_injection(prompt : str, original_injectors : list, modified_injectors : list) -> str:
+def add_argument_display(parser):
+    """
+        This functions adds display arguments to the parser.
+    """
+    parser.add_argument("-f", "--file", type=str, required=True, help="The markdown file to display.")
+    parser.add_argument("-u", "--url", type=str, default=DEFAULT_URL, help="The url to host the displayed markdown into.")
+    parser.add_argument("--here", action="store_true", default=False, help="Whether to avoid displaying the markdown on url, useful to display on python notebooks.")
+
+def extract_url(url):
+    """
+        This function extract the host and the port from an url.
+        Args:
+            url (str): The url to extract the host and port from.
+        Returns:
+            host (str): The host of the url.
+            port (str): The port of the url.
+    """
+    # check if url is consistent
+    if not re.match(DEFAULT_URL_REGEX, url):
+        raise ValueError("Invalid URL")
+    # remove https:// or http://
+    if len(parts := url.split("://")) > 1:
+        url = parts[1]
+    # split the url into host and port
+    host = url
+    port = None
+    if ":" in host:
+        host, port = host.split(":")
+    return host, port
+
+def prompt_injection(prompt : str, original_injectors : list, modified_injectors : list) -> str:
     """
         This function modifies a prompt injecting strings in place of others.
         Args:
