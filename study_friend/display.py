@@ -136,7 +136,7 @@ def markdown_to_html(fileName, verbose):
     extension_configs = {"pymdownx.highlight": {"linenums": True}, 'pymdownx.arithmatex': {'generic': True}}
     html = markdown.markdown(html, extensions=extensions, extension_configs=extension_configs)
     # get common path
-    common_dir = os.path.commonpath(images)
+    common_dir = os.path.dirname(images[0]) if len(images) == 1 else  os.path.commonpath(images) 
     return html, common_dir
 
 if __name__ == "__main__":

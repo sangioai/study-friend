@@ -10,6 +10,7 @@ from .utils import (
     add_argument_convert,
     add_argument_query,
     prompt_injection,
+    standardize_math_formulas,
     print_args
 )
 from .models import (
@@ -27,6 +28,8 @@ def group_images(subDirName, group_size=3, verbose=False):
             group_size (int): The size of the window to group images.
     Return: list of grouped file paths
     """
+    # ensure absolute path
+    subDirName = os.path.abspath(subDirName)
     # skip if not file
     if not os.path.isdir(subDirName):
         return []
@@ -104,6 +107,8 @@ def query_images(grouped_files, engine, model, processor, config, title_prompt, 
                     if verbose:
                         print(f"Model question: {question}")
                         print(f"Model answer: {answer}")
+                    # post-process math sections
+                    answer = standardize_math_formulas(answer)
                     # write to file
                     wfile.write(question+"\n")
                     wfile.write(answer+"\n")
@@ -160,7 +165,7 @@ if __name__ == "__main__":
     # let's use a temp file to store raw responses
     temp_file = args.output_file + "_temp"
     # let's call the functions with the arguments
-    dirs = convert_pdfs_to_images(args.dir, args.image_size)
+    dirs = convert_pdfs_to_images(args.dir, args.image_size) if args.image_dir == "" else [args.image_dir]
     # let's load the model
     model, processor, config = load_model(args.engine, args.model, args.verbose)
     # let's group images

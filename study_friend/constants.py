@@ -25,6 +25,7 @@ OUTPUT_FILE = "output.md"
 DEFAULT_TEMPERATURE = 0.1
 DEFAULT_MAX_TOKENS = 999
 DEFAULT_ENGINE = Engine.MLX_VLM if DEVICE_IS_MLX else Engine.Transformers
+DEFAULT_MATH_REGEX = r"""( *\\\[[\s\S]+?\\\]| *\\\([\s\S]+?\\\))"""
 # CONSTANTS - display
 DEFAULT_URL = "http://127.0.0.1:5000"
 DEFAULT_URL_REGEX = r"^(https?://)?([a-zA-Z0-9.-])+(:[0-9]+)?$"

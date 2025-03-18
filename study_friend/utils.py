@@ -21,6 +21,7 @@ def add_argument_query(parser):
     parser.add_argument("-o", "--output_file", type=str, default=OUTPUT_FILE, help="The file to write the model response into.")
     parser.add_argument("-m", "--model", type=str, default=DEFAULT_MODEL, help="The model to query with.")
     parser.add_argument("-e", "--engine", type=str, default=DEFAULT_ENGINE, choices=[e.value for e in Engine], help=f"Type of Engine to use, can be: {' | '.join([e.value for e in Engine])}")
+    parser.add_argument("-id", "--image_dir", type=str, default="", help="Direct path of dir containing images to process.")
     parser.add_argument("-tp", "--title_prompt", type=str, default=DEFAULT_TITLE_PROMPT, help="Prompt to use to generate the title of a slidepack.")
     parser.add_argument("-qp", "--question_prompt", type=str, default=DEFAULT_QUESTION_PROMPT, help="Prompt to use to generate questions.")
     parser.add_argument("-aq", "--answer_prompt", type=str, default=DEFAULT_ANSWER_PROMPT, help="Prompt to use to generate answers.")
@@ -60,6 +61,23 @@ def extract_url(url):
     if ":" in host:
         host, port = host.split(":")
     return host, port
+
+def standardize_math_formulas(text):
+    """
+        This function standardizes the math formulas in a markdown text.
+        Args:
+            text (str): The markdown text to standardize the math formulas in.
+        Returns:
+            text2 (str): The markdown text with standardized math formulas.
+    """
+    text2 = text
+    # find al math expression in text
+    for math in re.findall(DEFAULT_MATH_REGEX, text):
+        # remove '\n' -> new lines
+        math_oneline = re.sub("\n","",math).strip()
+        # replace multiple-line math texts with corresponding one-line math
+        text2 = text2.replace(math, math_oneline)
+    return text2
 
 def prompt_injection(prompt : str, original_injectors : list, modified_injectors : list) -> str:
     """
